@@ -4,6 +4,7 @@ from eth_account import Account
 
 from hyperliquid_agent.session import (
     ACCOUNT_ADDRESS_ENV,
+    DEFAULT_ACCOUNT_ADDRESS,
     SECRET_KEY_ENV,
     account_equity,
     agent_authorized,
@@ -15,12 +16,12 @@ class SessionTest(unittest.TestCase):
     def test_missing_secret_skips_account_setup(self):
         self.assertIsNone(load_credentials({}))
 
-    def test_secret_without_account_uses_signer_address(self):
+    def test_secret_without_account_uses_default_master(self):
         wallet = Account.create()
         creds = load_credentials({SECRET_KEY_ENV: wallet.key.hex()})
         self.assertEqual(creds.signer_address, wallet.address)
-        self.assertEqual(creds.account_address, wallet.address)
-        self.assertFalse(creds.uses_api_wallet)
+        self.assertEqual(creds.account_address, DEFAULT_ACCOUNT_ADDRESS)
+        self.assertTrue(creds.uses_api_wallet)
 
     def test_api_wallet_keeps_master_account_address(self):
         signer = Account.create()

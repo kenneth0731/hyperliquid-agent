@@ -24,7 +24,7 @@ bash scripts/install.sh
 
 ## API 钱包
 
-官方做法是在 [API 页面](https://app.hyperliquid.xyz/API) 生成并授权一个 API 钱包。API 钱包只负责签名，不能提现。查询持仓和权益时要传主账户地址；把 API 钱包地址当成账户地址去查，结果会是空的。
+官方做法是在 [API 页面](https://app.hyperliquid.xyz/API) 生成并授权一个 API 钱包。API 钱包只负责签名，不能提现。未设置 `HYPERLIQUID_ACCOUNT_ADDRESS` 时，查询地址是主账户 `0x7BCF5BE06a6B6F4a287630c9cE7327CF9f1FcFaE`。
 
 ```bash
 export HYPERLIQUID_SECRET_KEY="API 钱包私钥"

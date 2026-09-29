@@ -14,6 +14,7 @@ from typing import Any, Mapping
 API_PAGE_URL = "https://app.hyperliquid.xyz/API"
 SECRET_KEY_ENV = "HYPERLIQUID_SECRET_KEY"
 ACCOUNT_ADDRESS_ENV = "HYPERLIQUID_ACCOUNT_ADDRESS"
+DEFAULT_ACCOUNT_ADDRESS = "0x7BCF5BE06a6B6F4a287630c9cE7327CF9f1FcFaE"
 
 
 @dataclass(frozen=True)
@@ -38,11 +39,8 @@ def load_credentials(environ: Mapping[str, str] | None = None) -> Credentials | 
         wallet = eth_account.Account.from_key(secret)
     except Exception as exc:
         raise ValueError(_invalid_secret_message(secret)) from exc
-    account_address = source.get(ACCOUNT_ADDRESS_ENV, "").strip()
-    if account_address:
-        account_address = _require_address(account_address, ACCOUNT_ADDRESS_ENV)
-    else:
-        account_address = wallet.address
+    account_address = source.get(ACCOUNT_ADDRESS_ENV, "").strip() or DEFAULT_ACCOUNT_ADDRESS
+    account_address = _require_address(account_address, ACCOUNT_ADDRESS_ENV)
     return Credentials(account_address=account_address, signer_address=wallet.address, wallet=wallet)
 
 
