@@ -1,6 +1,6 @@
 # hyperliquid-agent
 
-连接 [Hyperliquid 交易页](https://app.hyperliquid.xyz/trade) 使用的公开 API。只读，不下单，不需要钱包或 API 密钥。
+连接 [Hyperliquid 交易页](https://app.hyperliquid.xyz/trade) 使用的公开 API。行情不需要密钥。签名交易按官方 SDK 的方式使用 API 钱包，本命令不会下单。
 
 | 用途 | 地址 |
 | --- | --- |
@@ -21,6 +21,18 @@ bash scripts/install.sh
 ```
 
 成功时会打印 BTC 买一、卖一、标记价、资金费率、持仓量，以及一条 WebSocket BBO。`/exchange` 只确认路由可达，发送的是空请求，不会下单。
+
+## API 钱包
+
+官方做法是在 [API 页面](https://app.hyperliquid.xyz/API) 生成并授权一个 API 钱包。API 钱包只负责签名，不能提现。查询持仓和权益时要传主账户地址；把 API 钱包地址当成账户地址去查，结果会是空的。
+
+```bash
+export HYPERLIQUID_SECRET_KEY="API 钱包私钥"
+export HYPERLIQUID_ACCOUNT_ADDRESS="主账户地址"
+.venv/bin/python -m hyperliquid_agent
+```
+
+私钥不要写进仓库。未设置 `HYPERLIQUID_SECRET_KEY` 时，命令仍会检查公开行情。
 
 ## 测试
 
