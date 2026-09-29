@@ -37,7 +37,7 @@ def load_credentials(environ: Mapping[str, str] | None = None) -> Credentials | 
     try:
         wallet = eth_account.Account.from_key(secret)
     except Exception as exc:
-        raise ValueError(f"{SECRET_KEY_ENV} 不是有效的私钥") from exc
+        raise ValueError(_invalid_secret_message(secret)) from exc
     account_address = source.get(ACCOUNT_ADDRESS_ENV, "").strip()
     if account_address:
         account_address = _require_address(account_address, ACCOUNT_ADDRESS_ENV)
@@ -56,6 +56,16 @@ def account_equity(user_state: dict[str, Any]) -> str:
     if not isinstance(summary, dict) or "accountValue" not in summary:
         raise RuntimeError("userState 没有返回账户权益")
     return str(summary["accountValue"])
+
+
+def _invalid_secret_message(secret: str) -> str:
+    body = secret[2:] if secret.lower().startswith("0x") else secret
+    if len(body) == 40:
+        return (
+            f"{SECRET_KEY_ENV} 填成了地址。私钥是 64 位十六进制，"
+            f"地址放到 {ACCOUNT_ADDRESS_ENV}"
+        )
+    return f"{SECRET_KEY_ENV} 不是有效的私钥"
 
 
 def _require_address(value: str, name: str) -> str:

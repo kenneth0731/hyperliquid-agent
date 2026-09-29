@@ -37,6 +37,14 @@ class SessionTest(unittest.TestCase):
             load_credentials({SECRET_KEY_ENV: "not-a-key"})
         self.assertNotIn("not-a-key", str(caught.exception))
 
+    def test_address_in_secret_explains_the_mixup(self):
+        address = Account.create().address
+        with self.assertRaises(ValueError) as caught:
+            load_credentials({SECRET_KEY_ENV: address})
+        message = str(caught.exception)
+        self.assertIn("填成了地址", message)
+        self.assertNotIn(address, message)
+
     def test_agent_authorization_is_case_insensitive(self):
         agents = [{"name": "bot", "address": "0xABCDEF", "validUntil": 1}]
         self.assertTrue(agent_authorized(agents, "0xabcdef"))
