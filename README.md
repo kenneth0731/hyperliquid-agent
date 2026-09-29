@@ -1,6 +1,12 @@
 # hyperliquid-agent
 
-只读连接 Hyperliquid 主网公开接口 `POST /info`，不需要钱包或 API 密钥。
+连接 [Hyperliquid 交易页](https://app.hyperliquid.xyz/trade) 使用的公开 API。只读，不下单，不需要钱包或 API 密钥。
+
+| 用途 | 地址 |
+| --- | --- |
+| 行情 | `POST https://api.hyperliquid.xyz/info` |
+| 交易路由 | `POST https://api.hyperliquid.xyz/exchange` |
+| 实时盘口 | `wss://api.hyperliquid.xyz/ws` |
 
 ## 安装
 
@@ -14,10 +20,10 @@ bash scripts/install.sh
 .venv/bin/python -m hyperliquid_agent
 ```
 
-成功时会打印主网地址、市场数量，以及 BTC、ETH、SOL 的中间价。
+成功时会打印 BTC 买一、卖一、标记价、资金费率、持仓量，以及一条 WebSocket BBO。`/exchange` 只确认路由可达，发送的是空请求，不会下单。
 
 ## 测试
 
 ```bash
-.venv/bin/python -m unittest tests.test_client
+.venv/bin/python -m unittest discover -s tests
 ```
